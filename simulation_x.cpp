@@ -584,7 +584,7 @@ void XSimulation::MakeStat() {
   ++count;
   stat.e += TotalEnergy();
   stat.T += Temperature();
-  int j;
+  /*int j;
   XNum c = 0;
   for (j = 0; j < N*P; ++j)
     c += particles[j].coor[0];
@@ -599,6 +599,25 @@ void XSimulation::MakeStat() {
     if (index >= stat.num)
       continue;
     stat.den[index] += 1;
+  }*/
+  int j, l;
+  for (j = 1; j <= P; ++j) {
+    XNum c = 0;
+    for (l = 1; l <= N; ++l) {
+      int index = Index(l, j);
+      c += particles[index].coor[0];
+    }
+    c /= N;
+    for (l = 1; l <= N; ++l) {
+      int i = Index(l, j);
+      XNum dis = std::abs(MinimumImage2(particles[i].coor[0]-c));
+      int index = int(dis/incre);
+      if (index < 0)
+        index = 0;
+      if (index >= stat.num)
+        continue;
+      stat.den[index] += 1;
+    }
   }
 }
 
